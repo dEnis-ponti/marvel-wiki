@@ -8,6 +8,7 @@ import CharInfo from "../charInfo/CharInfo";
 import ErrorBoundary from "../errorBoundary/ErrorBoundary";
 
 import decoration from '../../resources/img/vision.png';
+import ComicsList from "../comicsList/ComicsList";
 
 const App = () => {
 
@@ -33,6 +34,7 @@ const App = () => {
           </ErrorBoundary>
         </div>
         <img src={decoration} alt="" className="bg-decoration" />
+        {/* <ComicsList /> */}
       </main>
     </div>
   )

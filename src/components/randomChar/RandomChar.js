@@ -1,18 +1,15 @@
 import {useState, useEffect} from "react";
 import Spinner from '../spinner/Spinner';
 import ErrorMessage from '../errorMessage/ErrorMessage';
-import MarvelService from '../../services/MarvelService';
+import useMarvelService from '../../services/MarvelService';
 
 import './randomChar.scss';
 import mjolnir from '../../resources/img/mjolnir.png';
 
 const RandomChar = () => {
 
-  const [char, setChar] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  const marvelService = new MarvelService();
+  const [char, setChar] = useState(null);
+  const {loading, error, getCharacter, clearError} = useMarvelService();
 
   useEffect(() => {
     updateChar();
@@ -20,30 +17,18 @@ const RandomChar = () => {
 
   const onCharLoaded = (char) => {
     setChar(char);
-    setLoading(false);
-  }
-
-  const onCharLoading = () => {
-    setLoading(true)
-  }
-
-  const onError = () => {
-    setError(true);
-    setLoading(false);
   }
 
   const updateChar = () => {
-    const id = Math.floor(Math.random() * (1011400 - 1011000) + 1011000);
-    onCharLoading();
-    marvelService
-      .getCharacter(id)
-      .then(onCharLoaded)
-      .catch(onError)
+    clearError();
+    const id = Math.floor(Math.random() * (1011400 - 1011000)) + 1011000;
+    getCharacter(id)
+      .then(onCharLoaded);
   }
 
   const errorMessage = error ? <ErrorMessage /> : null;
   const spinner = loading ? <Spinner /> : null;
-  const content = !(loading || error) ? <View char={char} /> : null;
+  const content = !(loading || error || !char) ? <View char={char} /> : null;
 
   return (
     <div className="randomchar">
@@ -70,7 +55,7 @@ const RandomChar = () => {
 const View = ({char}) => {
   const {name, description, thumbnail, homepage, wiki} = char;
   let imgStyle = {'objectFit': 'cover'};
-  if (char.thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
+  if (thumbnail === 'http://i.annihil.us/u/prod/marvel/i/mg/b/40/image_not_available.jpg') {
     imgStyle = {'objectFit': 'unset'};
   }
 
